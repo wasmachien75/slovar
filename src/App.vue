@@ -2,7 +2,7 @@ y
 <template>
   <div id="app">
     <AutoComplete
-      source="https://localhost:5001/api/search?startsWith="
+      v-bind:source="this.apiEndpoint"
       results-display="lemma"
       results-property="results"
       placeholder="Введите слово"
@@ -21,7 +21,6 @@ y
 </template>
 
 <script>
-import Search from "./components/Search.vue";
 import AutoComplete from "vuejs-auto-complete";
 
 export default {
@@ -29,7 +28,11 @@ export default {
   data: function() {
     return {
       selectedItem: null,
-      definitions: []
+      definitions: [],
+      apiEndpoint:
+        (process.env.NODE_ENV === "development"
+          ? "https://localhost:5001"
+          : "") + "/api/search?startsWith="
     };
   },
   computed: {
@@ -44,7 +47,6 @@ export default {
     }
   },
   components: {
-    Search,
     AutoComplete
   },
   methods: {
