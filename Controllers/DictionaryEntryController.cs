@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 
 namespace slovar.Controllers
 {
@@ -11,9 +13,12 @@ namespace slovar.Controllers
     public class DictionaryEntryController : ControllerBase
     {
         DictionaryEntryContext _context;
-        public DictionaryEntryController()
+        IMemoryCache _cache;
+        public DictionaryEntryController(IMemoryCache cache)
         {
             _context = new DictionaryEntryContext();
+            _cache = cache;
+
         }
         [HttpGet("id/{id}")]
         public ActionResult<DictionaryEntry> Get(int id)
@@ -25,19 +30,27 @@ namespace slovar.Controllers
         [HttpGet]
         public ActionResult<DictionaryEntrySearchResult> Search()
         {
-            Microsoft.Extensions.Primitives.StringValues searchValue;
+            StringValues searchValue;
             Request.Query.TryGetValue("startsWith", out searchValue);
             if (searchValue.Count == 0)
             {
                 return BadRequest();
             }
-            return new DictionaryEntrySearchResult()
+            var singleSearchValue = searchValue.First();
+            DictionaryEntrySearchResult cacheResult;
+            if (!_cache.TryGetValue(singleSearchValue, out cacheResult))
             {
-                Results = _context.DictionaryEntries
+                var result = new DictionaryEntrySearchResult()
+                {
+                    Results = _context.DictionaryEntries
                     .Where(de => de.Lemma.StartsWith(searchValue.First().ToLower()))
                     .Take(10)
                     .ToArray()
-            };
+                };
+                _cache.Set(singleSearchValue, result, new TimeSpan(5, 0, 0, 0, 0));
+                return result;
+            }
+            return cacheResult;
 
         }
 

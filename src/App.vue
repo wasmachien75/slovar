@@ -1,4 +1,3 @@
-y
 <template>
   <div id="app">
     <AutoComplete
