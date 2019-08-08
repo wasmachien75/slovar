@@ -5,12 +5,53 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Seeder
 {
     class Program
     {
-        static void _Main(string[] args)
+
+        public static void SetStressIndex()
+        {
+            var _context = new DictionaryEntryContext();
+            using (var inputStream = new FileStream(@"C:\Users\Willem\Downloads\ru-ru_ozhegov_shvedova_cc_v2_0.dsl", FileMode.Open))
+            {
+                int cnt = 0;
+                StreamReader reader = new StreamReader(inputStream);
+                while (!reader.EndOfStream)
+                {
+                    while (char.IsWhiteSpace((char)reader.Peek()))
+                    {
+                        reader.ReadLine();
+                    }
+                    string lemma = reader.ReadLine();
+                    DictionaryEntry entry = _context.DictionaryEntries.Where(de => de.Lemma == lemma).FirstOrDefault();
+                    if (entry != null)
+                    {
+                        string definition = reader.ReadLine();
+                        if (definition.Contains("_"))
+                        {
+                            Match match = Regex.Match(definition, "[А-Я]+(?=_)");
+                            if (match.Success)
+                            {
+                                _context.Update(entry);
+                                entry.StressIndex = match.Value.Length;
+                                cnt++;
+                                if (cnt % 500 == 0)
+                                {
+                                    _context.SaveChanges();
+                                }
+                            }
+                        }
+                    }
+                }
+                _context.SaveChanges();
+
+            }
+        }
+
+        static void AddInitial()
         {
             var _context = new DictionaryEntryContext();
             using (var inputStream = new FileStream(@"Seeder\dictionary.dsl", FileMode.Open))
@@ -30,7 +71,6 @@ namespace Seeder
                 }
                 _context.SaveChanges();
             };
-
         }
 
     }

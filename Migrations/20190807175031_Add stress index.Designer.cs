@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using slovar;
 
 namespace slovar.Migrations
 {
     [DbContext(typeof(DictionaryEntryContext))]
-    partial class DictionaryEntryContextModelSnapshot : ModelSnapshot
+    [Migration("20190807175031_Add stress index")]
+    partial class Addstressindex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

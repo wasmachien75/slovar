@@ -10,7 +10,7 @@
     />
     <div class="entry">
       <div class="lemma">
-        <span>{{lemma}}</span>
+        <span>{{lemmaWithStressMarker}}</span>
       </div>
       <div class="definition">
         <p v-bind:key="index" v-for="(item,index) in this.definitionParts">{{item}}</p>
@@ -43,6 +43,15 @@ export default {
     },
     lemma: function() {
       return this.selectedItem && this.selectedItem.lemma;
+    },
+    lemmaWithStressMarker: function() {
+      return (
+        this.lemma &&
+        this.combineLemmaWithStressIndicator(
+          this.lemma,
+          this.selectedItem.stressIndex
+        )
+      );
     }
   },
   components: {
@@ -60,7 +69,20 @@ export default {
     },
     formatDescription(stringDescription) {
       //insert newlines before 1., 2.,... if there is none
-      return stringDescription.replace(/[^\n](?=\d\.)/, "$&\n");
+      return stringDescription.replace(/[^\n\d](?=\d+\.)/, "$&\n");
+    },
+    combineLemmaWithStressIndicator(string, stressIndex) {
+      if (string == null) {
+        return "";
+      }
+      if (stressIndex == null) {
+        return string;
+      }
+      return (
+        string.substring(0, stressIndex) +
+        String.fromCharCode(769) +
+        string.substring(stressIndex)
+      );
     }
   }
 };
