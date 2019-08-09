@@ -7,7 +7,9 @@
       placeholder="Введите слово"
       input-class="search"
       @selected="display"
-    />
+    >
+      <template #noResults>Ничего не найдено.</template>
+    </AutoComplete>
     <div class="entry">
       <div class="lemma">
         <span>{{lemmaWithStressMarker}}</span>
@@ -90,9 +92,9 @@ export default {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=PT+Serif:400,700&display=swap&subset=cyrillic");
-
+$font: "PT Serif", serif;
 #app {
-  font-family: "PT Serif", serif;
+  font-family: $font;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   max-width: 600px;
@@ -103,7 +105,7 @@ export default {
   border-left: solid 5px #aaa;
   padding-left: 16px;
   margin-top: 45px;
-  font-family: "PT Serif", serif;
+  font-family: $font;
 }
 
 .lemma {
@@ -120,6 +122,7 @@ export default {
   input {
     font-size: 1.2em;
     padding: 3px;
+    font-family: $font;
   }
 }
 </style>

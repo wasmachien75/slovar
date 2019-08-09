@@ -51,7 +51,7 @@ namespace slovar
                 app.UseHsts();
             }
             app.UseResponseCaching();
-            app.UseStaticFiles();
+            app.UseFileServer();
             app.UseCors();
             app.UseHttpsRedirection();
             app.UseMvc();

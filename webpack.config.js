@@ -3,10 +3,13 @@ const path = require("path");
 
 module.exports = {
   mode: "development",
-  entry: "./src/main.js",
+  entry: "./Client/main.js",
   output: {
     path: path.resolve(__dirname, "wwwroot"),
     filename: "main.js"
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, "wwwroot")
   },
   module: {
     rules: [

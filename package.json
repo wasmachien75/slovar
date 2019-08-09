@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "concurrently -n Vue,dotnet \"vue-cli-service serve\" \" dotnet watch run\"",
+    "serve": "concurrently -n Vue,dotnet \"webpack-dev-server\" \" dotnet watch run\"",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -29,7 +29,8 @@
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0"
   },
   "eslintConfig": {
     "root": true,
