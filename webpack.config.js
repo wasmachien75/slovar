@@ -2,7 +2,6 @@ const { VueLoaderPlugin } = require("vue-loader");
 const path = require("path");
 
 module.exports = {
-  mode: "development",
   entry: "./Client/main.js",
   output: {
     path: path.resolve(__dirname, "wwwroot"),
