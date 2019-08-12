@@ -9,8 +9,13 @@ using System.Text.RegularExpressions;
 
 namespace Seeder
 {
-    class Program
+    public class Seeder
     {
+        public static void Translate()
+        {
+            var s = new TranslationSeeder();
+            s.Query();
+        }
 
         public static void SetStressIndex()
         {
@@ -50,7 +55,6 @@ namespace Seeder
 
             }
         }
-
         static void AddInitial()
         {
             var _context = new DictionaryEntryContext();
@@ -74,14 +78,13 @@ namespace Seeder
         }
 
     }
-
     class Parser
     {
         //lines that start with no tab are new entries.
         //following lines that start with a tab form the definition of that entry.
         Stream _inputStream;
         StreamReader reader;
-        bool reachedEnd = false;
+
         public Parser(Stream inputStream)
         {
             _inputStream = inputStream;

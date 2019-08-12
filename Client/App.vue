@@ -11,25 +11,24 @@
       <template #noResults>Ничего не найдено.</template>
     </AutoComplete>
     <div class="entry">
-      <div class="lemma">
-        <span>{{lemmaWithStressMarker}}</span>
-      </div>
-      <div class="definition">
-        <p v-bind:key="index" v-for="(item,index) in this.definitionParts">{{item}}</p>
-      </div>
+      <Lemma :lemma="this.lemma" :stressIndex="this.stressIndex" />
+      <Definition :definition="this.definition" v-if="this.definition" />
+      <Translation :data="this.translation" v-if="this.translation" />
     </div>
   </div>
 </template>
 
 <script>
 import AutoComplete from "vuejs-auto-complete";
+import Translation from "./Translation.vue";
+import Definition from "./Definition.vue";
+import Lemma from "./Lemma.vue";
 
 export default {
   name: "app",
   data: function() {
     return {
       selectedItem: null,
-      definitions: [],
       apiEndpoint:
         (process.env.NODE_ENV === "development"
           ? "https://localhost:5001"
@@ -37,54 +36,28 @@ export default {
     };
   },
   computed: {
-    definitionParts: function() {
-      if (this.selectedItem != null) {
-        return this.formatDescription(this.selectedItem.definition).split("\n");
-      }
-      return [];
-    },
     lemma: function() {
       return this.selectedItem && this.selectedItem.lemma;
     },
-    lemmaWithStressMarker: function() {
-      return (
-        this.lemma &&
-        this.combineLemmaWithStressIndicator(
-          this.lemma,
-          this.selectedItem.stressIndex
-        )
-      );
+    stressIndex: function() {
+      return this.selectedItem && this.selectedItem.stressIndex;
+    },
+    definition: function() {
+      return this.selectedItem && this.selectedItem.definition;
+    },
+    translation: function() {
+      return this.selectedItem && this.selectedItem.translation;
     }
   },
   components: {
-    AutoComplete
+    AutoComplete,
+    Translation,
+    Definition,
+    Lemma
   },
   methods: {
-    log(something) {
-      console.log(something);
-    },
     display(something) {
       this.selectedItem = something.selectedObject;
-    },
-    clearDescription() {
-      this.selectedItem = null;
-    },
-    formatDescription(stringDescription) {
-      //insert newlines before 1., 2.,... if there is none
-      return stringDescription.replace(/[^\n\d](?=\d+\.)/, "$&\n");
-    },
-    combineLemmaWithStressIndicator(string, stressIndex) {
-      if (string == null) {
-        return "";
-      }
-      if (stressIndex == null) {
-        return string;
-      }
-      return (
-        string.substring(0, stressIndex) +
-        String.fromCharCode(769) +
-        string.substring(stressIndex)
-      );
     }
   }
 };
@@ -106,16 +79,6 @@ $font: "PT Serif", serif;
   padding-left: 16px;
   margin-top: 45px;
   font-family: $font;
-}
-
-.lemma {
-  font-weight: bold;
-}
-
-.description {
-  p {
-    line-height: 1.4em;
-  }
 }
 
 .autocomplete {

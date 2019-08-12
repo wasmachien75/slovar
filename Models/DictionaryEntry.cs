@@ -9,5 +9,6 @@ namespace slovar
         public string Lemma { get; set; }
         public string Definition { get; set; }
         public int? StressIndex { get; set; }
+        public string Translation { get; set; }
     }
 }
