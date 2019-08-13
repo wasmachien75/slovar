@@ -30,10 +30,9 @@ export default {
   data: function() {
     return {
       selectedItem: null,
-      apiEndpoint:
-        (process.env.NODE_ENV === "development"
-          ? "https://localhost:5001"
-          : "") + "/api/search?startsWith="
+      rootEndPoint:
+        process.env.NODE_ENV === "development" ? "https://localhost:5001" : "",
+      apiEndpoint: this.rootEndPoint + "/api/search?startsWith="
     };
   },
   computed: {
@@ -61,7 +60,7 @@ export default {
       this.selectedItem = something.selectedObject;
     },
     getRandom() {
-      fetch("https://localhost:5001/api/random").then(r =>
+      fetch(this.rootEndPoint + "/api/random").then(r =>
         r.json().then(json => (this.selectedItem = json))
       );
     }
