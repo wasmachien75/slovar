@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <AutoComplete
-      v-bind:source="this.apiEndpoint"
+      v-bind:source="this.rootEndPoint + '/api/search?startsWith='"
       results-display="lemma"
       results-property="results"
       placeholder="Введите слово"
@@ -31,8 +31,7 @@ export default {
     return {
       selectedItem: null,
       rootEndPoint:
-        process.env.NODE_ENV === "development" ? "https://localhost:5001" : "",
-      apiEndpoint: this.rootEndPoint + "/api/search?startsWith="
+        process.env.NODE_ENV === "development" ? "https://localhost:5001" : ""
     };
   },
   computed: {
