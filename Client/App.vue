@@ -10,6 +10,7 @@
     >
       <template #noResults>Ничего не найдено.</template>
     </AutoComplete>
+    <h5 @click="getRandom()">Random</h5>
     <div class="entry">
       <Lemma :lemma="this.lemma" :stressIndex="this.stressIndex" />
       <Definition :definition="this.definition" v-if="this.definition" />
@@ -58,6 +59,11 @@ export default {
   methods: {
     display(something) {
       this.selectedItem = something.selectedObject;
+    },
+    getRandom() {
+      fetch("https://localhost:5001/api/random").then(r =>
+        r.json().then(json => (this.selectedItem = json))
+      );
     }
   }
 };

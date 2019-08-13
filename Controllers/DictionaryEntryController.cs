@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using System.Data.SqlClient;
 
 namespace slovar.Controllers
 {
@@ -24,6 +26,12 @@ namespace slovar.Controllers
         public ActionResult<DictionaryEntry> Get(int id)
         {
             return _context.DictionaryEntries.Find(id);
+        }
+
+        [HttpGet("random")]
+        public ActionResult<DictionaryEntry> Random()
+        {
+            return _context.DictionaryEntries.FromSql("SELECT * FROM DictionaryEntries ORDER BY RANDOM() LIMIT 1").First();
         }
 
         [Route("search")]

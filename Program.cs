@@ -15,7 +15,6 @@ namespace slovar
     {
         public static void Main(string[] args)
         {
-            Seeder.Seeder.Translate();
             CreateWebHostBuilder(args).Build().Run();
         }
 
