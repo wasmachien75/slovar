@@ -28,6 +28,12 @@ namespace slovar.Controllers
             return _context.DictionaryEntries.Find(id);
         }
 
+        [HttpGet("lemma/{lemma}")]
+        public ActionResult<DictionaryEntry> Get(string lemma)
+        {
+            return _context.DictionaryEntries.FirstOrDefault(de => de.LemmaForSearch == lemma);
+        }
+
         [HttpGet("random")]
         public ActionResult<DictionaryEntry> Random()
         {
@@ -38,8 +44,7 @@ namespace slovar.Controllers
         [HttpGet]
         public ActionResult<DictionaryEntrySearchResult> Search()
         {
-            StringValues searchValue;
-            Request.Query.TryGetValue("startsWith", out searchValue);
+            Request.Query.TryGetValue("startsWith", out StringValues searchValue);
             if (searchValue.Count == 0)
             {
                 return BadRequest();
@@ -48,10 +53,12 @@ namespace slovar.Controllers
             DictionaryEntrySearchResult cacheResult;
             if (!_cache.TryGetValue(singleSearchValue, out cacheResult))
             {
+                String key = TransformLemmaForSearch(searchValue.First().ToLower());
                 var result = new DictionaryEntrySearchResult()
                 {
                     Results = _context.DictionaryEntries
-                    .Where(de => de.Lemma.StartsWith(searchValue.First().ToLower()))
+                    .Where(de => de.LemmaForSearch.StartsWith(key))
+                    .OrderBy(de => de.LemmaForSearch)
                     .Take(10)
                     .ToArray()
                 };
@@ -60,6 +67,11 @@ namespace slovar.Controllers
             }
             return cacheResult;
 
+        }
+
+        private string TransformLemmaForSearch(string lemma)
+        {
+            return new LemmaForSearchTransformer(lemma).Construct();
         }
 
     }

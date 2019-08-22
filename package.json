@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "concurrently -n Vue,dotnet \"webpack-dev-server\" \" dotnet watch run\"",
-    "build": "webpack"
+    "serve": "concurrently -n Vue,dotnet \"webpack-dev-server\" \" dotnet watch run --launch-profile Development\"",
+    "build": "webpack --mode='production' && dotnet publish -c Release"
   },
   "dependencies": {
     "axios": "^0.19.0",

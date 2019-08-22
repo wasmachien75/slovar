@@ -44,6 +44,7 @@ namespace slovar
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors();
             }
             else
             {
@@ -52,7 +53,6 @@ namespace slovar
             }
             app.UseResponseCaching();
             app.UseFileServer();
-            app.UseCors();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

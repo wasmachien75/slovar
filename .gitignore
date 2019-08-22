@@ -41,6 +41,7 @@ mono_crash.*
 appsettings*.json
 *.db
 wwwroot
+!wwwroot/index.html
 
 Properties/
 

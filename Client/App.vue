@@ -12,6 +12,7 @@
     </AutoComplete>
     <h5 @click="getRandom()">Random</h5>
     <div class="entry">
+      <p v-if="isLoading">loading...</p>
       <Lemma :lemma="this.lemma" :stressIndex="this.stressIndex" />
       <Definition :definition="this.definition" v-if="this.definition" />
       <Translation :data="this.translation" v-if="this.translation" />
@@ -30,8 +31,9 @@ export default {
   data: function() {
     return {
       selectedItem: null,
+      isLoading: false,
       rootEndPoint:
-        process.env.NODE_ENV === "development" ? "https://localhost:5001" : ""
+        process.env.NODE_ENV === "development" ? "http://localhost:5001" : ""
     };
   },
   computed: {
@@ -58,10 +60,9 @@ export default {
     display(something) {
       this.selectedItem = something.selectedObject;
     },
-    getRandom() {
-      fetch(this.rootEndPoint + "/api/random").then(r =>
-        r.json().then(json => (this.selectedItem = json))
-      );
+    async getRandom() {
+      let response = await fetch(this.rootEndPoint + "/api/random");
+      this.selectedItem = await response.json();
     }
   }
 };
@@ -76,6 +77,11 @@ $font: "PT Serif", serif;
   -moz-osx-font-smoothing: grayscale;
   max-width: 600px;
   margin: 50px auto;
+}
+
+h5 {
+  font-variant: small-caps;
+  cursor: pointer;
 }
 
 .entry {
