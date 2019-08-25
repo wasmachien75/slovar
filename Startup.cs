@@ -53,7 +53,6 @@ namespace slovar
             }
             app.UseResponseCaching();
             app.UseFileServer();
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

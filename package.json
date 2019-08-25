@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "concurrently -n Vue,dotnet \"webpack-dev-server\" \" dotnet watch run --launch-profile Development\"",
-    "build": "webpack --mode='production' && dotnet publish -c Release"
+    "build": "webpack --mode='production' && dotnet publish -c Release",
+    "upload-db": "scp dict.db root@116.203.204.82:/home/slovar/bin/Release/netcoreapp2.2/publish/"
   },
   "dependencies": {
     "axios": "^0.19.0",
