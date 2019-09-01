@@ -1,4 +1,4 @@
-namespace slovar
+namespace Slovar
 {
     public class LemmaForSearchTransformer
     {

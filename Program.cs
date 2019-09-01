@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Seeder;
 
-namespace slovar
+namespace Slovar
 {
     public class Program
     {

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 
-namespace slovar
+namespace Slovar
 {
     public class Startup
     {

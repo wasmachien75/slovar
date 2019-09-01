@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
-namespace slovar.Migrations
+namespace Slovar.Migrations
 {
     public partial class fixdata : Migration
     {

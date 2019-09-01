@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace slovar.Migrations
+namespace Slovar.Migrations
 {
     public partial class addsearchstring : Migration
     {

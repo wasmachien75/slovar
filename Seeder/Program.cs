@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using slovar;
+using Slovar;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;

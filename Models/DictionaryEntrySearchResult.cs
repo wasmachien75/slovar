@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace slovar
+namespace Slovar
 {
     public class DictionaryEntrySearchResult
     {

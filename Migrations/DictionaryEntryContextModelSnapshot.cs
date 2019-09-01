@@ -3,9 +3,9 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using slovar;
+using Slovar;
 
-namespace slovar.Migrations
+namespace Slovar.Migrations
 {
     [DbContext(typeof(DictionaryEntryContext))]
     partial class DictionaryEntryContextModelSnapshot : ModelSnapshot

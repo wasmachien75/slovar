@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using slovar;
+using Slovar;
 
-namespace slovar.Migrations
+namespace Slovar.Migrations
 {
     [DbContext(typeof(DictionaryEntryContext))]
     [Migration("20190807175031_Add stress index")]

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System.Data.SqlClient;
 
-namespace slovar.Controllers
+namespace Slovar.Controllers
 {
     [Route("api")]
     [ApiController]
