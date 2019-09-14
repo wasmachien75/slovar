@@ -24,6 +24,7 @@ import AutoComplete from "vuejs-auto-complete";
 import Translation from "./Translation.vue";
 import Definition from "./Definition.vue";
 import Lemma from "./Lemma.vue";
+import createCache from "./Cache.js";
 
 export default {
   name: "app",
@@ -54,7 +55,8 @@ export default {
     AutoComplete,
     Translation,
     Definition,
-    Lemma
+    Lemma,
+    Cache
   },
   watch: {
     $route: "getFromRoute"
@@ -62,11 +64,14 @@ export default {
   methods: {
     display(something) {
       this.selectedItem = something.selectedObject;
-      this.$router.push(`/${this.lemma}`);
+      this.storeCurrent();
+      this.addCurrentToHistory();
     },
     async getRandom() {
-      this.selectedItem = await this.fetchJson("/api/random");
-      this.$router.push(`/${this.lemma}`);
+      let randomItem = await this.fetchJson("/api/random");
+      this.selectedItem = randomItem;
+      this.storeCurrent();
+      this.addCurrentToHistory();
     },
     async get(lemma) {
       let lemmaObj = this.cache.get(lemma);
@@ -100,23 +105,15 @@ export default {
         await this.get(lemma);
       }
     },
-    initCache() {
-      var _cache = {};
-      let cache = function() {
-        return {
-          put: (obj, name) => {
-            _cache[name] = obj;
-          },
-          get: name => _cache[name],
-          _cache: _cache
-        };
-      };
-
-      return cache;
+    storeCurrent() {
+      this.cache.put(this.selectedItem, this.lemma);
+    },
+    addCurrentToHistory() {
+      this.$router.push(`/${this.lemma}`);
     }
   },
   mounted: async function() {
-    this.cache = this.initCache()();
+    this.cache = createCache()();
     await this.getFromRoute();
   }
 };
