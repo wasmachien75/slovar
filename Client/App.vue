@@ -72,7 +72,7 @@ export default {
       let lemmaObj = this.cache.get(lemma);
       if (!lemmaObj) {
         this.isFetching = true;
-        let lemmaObj = await this.fetchJson(`/api/lemma/${lemma}`);
+        lemmaObj = await this.fetchJson(`/api/lemma/${lemma}`);
         this.cache.put(lemmaObj, lemma);
       }
       this.selectedItem = lemmaObj;
@@ -107,7 +107,8 @@ export default {
           put: (obj, name) => {
             _cache[name] = obj;
           },
-          get: name => _cache[name]
+          get: name => _cache[name],
+          _cache: _cache
         };
       };
 
