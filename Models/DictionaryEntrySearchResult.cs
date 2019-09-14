@@ -4,6 +4,6 @@ namespace Slovar.Models
 {
     public class DictionaryEntrySearchResult
     {
-        public IEnumerable<DictionaryEntryForClient> Results { get; set; }
+        public IEnumerable<string> Results { get; set; }
     }
 }

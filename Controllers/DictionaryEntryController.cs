@@ -32,15 +32,22 @@ namespace Slovar.Controllers
         [HttpGet("lemma/{lemma}")]
         public ActionResult<DictionaryEntryForClient> Get(string lemma)
         {
-            var entry = _context.DictionaryEntries
-                .Include(de => de.Usages)
-                .FirstOrDefault(de => de.LemmaForSearch == lemma);
-
-            if (entry == null)
+            var cacheKey = "entry_" + lemma;
+            if (!_cache.TryGetValue(cacheKey, out DictionaryEntryForClient cacheResult))
             {
-                NotFound();
+                var entry = _context.DictionaryEntries
+                    .Include(de => de.Usages)
+                    .FirstOrDefault(de => de.LemmaForSearch == lemma);
+
+                if (entry == null)
+                {
+                    NotFound();
+                }
+                var entryForClient = new DictionaryEntryForClient(entry);
+                _cache.Set("entry_" + lemma, entryForClient, TimeSpan.FromDays(1));
+                return entryForClient;
             }
-            return new DictionaryEntryForClient(entry);
+            return cacheResult;
         }
 
         [HttpGet("random")]
@@ -52,20 +59,20 @@ namespace Slovar.Controllers
         [HttpGet("search")]
         public ActionResult<DictionaryEntrySearchResult> Search([FromQuery] string startsWith)
         {
-            if (!_cache.TryGetValue(startsWith, out DictionaryEntrySearchResult cacheResult))
+            var cacheKey = "search_" + startsWith;
+            if (!_cache.TryGetValue(cacheKey, out DictionaryEntrySearchResult cacheResult))
             {
                 String key = TransformLemmaForSearch(startsWith.ToLower());
                 var result = new DictionaryEntrySearchResult()
                 {
                     Results = _context.DictionaryEntries
-                    .Include(e => e.Usages)
                     .Where(de => de.LemmaForSearch.StartsWith(key))
                     .OrderBy(de => de.LemmaForSearch)
                     .Take(10)
-                    .Select(e => new DictionaryEntryForClient(e))
+                    .Select(e => e.Lemma)
                     .ToList()
                 };
-                _cache.Set(startsWith, result, new TimeSpan(5, 0, 0, 0, 0));
+                _cache.Set(cacheKey, result, TimeSpan.FromDays(1));
                 return result;
             }
             return cacheResult;

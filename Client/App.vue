@@ -4,6 +4,7 @@
       v-bind:source="this.rootEndPoint + '/api/search?startsWith='"
       results-display="lemma"
       results-property="results"
+      :results-formatter="this.formatResponse"
       placeholder="Введите слово"
       input-class="search"
       @selected="display"
@@ -62,10 +63,17 @@ export default {
     $route: "getFromRoute"
   },
   methods: {
+    formatResponse(resp) {
+      return resp.results.map(l => {
+        return { lemma: l };
+      });
+    },
     display(something) {
-      this.selectedItem = something.selectedObject;
-      this.storeCurrent();
-      this.addCurrentToHistory();
+      this.get(something.selectedObject.lemma)
+        .then(r => {
+          this.addCurrentToHistory();
+        })
+        .catch(e => console.log(e));
     },
     async getRandom() {
       let randomItem = await this.fetchJson("/api/random");
