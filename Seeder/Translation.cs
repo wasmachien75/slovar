@@ -20,7 +20,9 @@ namespace Slovar
         public void Query()
         {
             var map = GetTranslationMap();
-            var _context = new DictionaryEntryContext();
+            var optionsBuilder = new DbContextOptionsBuilder<DictionaryContext>();
+            optionsBuilder.UseSqlite("Data source=dict.db");
+            var _context = new DictionaryContext(optionsBuilder.Options);
             var lastId = _context.DictionaryEntries.OrderBy(e => e.Id).Last().Id;
 
             var last = 0;

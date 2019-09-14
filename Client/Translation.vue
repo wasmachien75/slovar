@@ -2,14 +2,11 @@
   <section class="translation" v-if="this.isTranslation">
     <h4>Перевод</h4>
     <div class="translation">
-      <div
+      <p
         :class="{hidden: !isTranslation, li:isList}"
         v-bind:key="index"
         v-for="(item,index) in this.translationParts"
-      >
-        {{item}}
-        <br />
-      </div>
+      >{{item}}</p>
     </div>
   </section>
 </template>

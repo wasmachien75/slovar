@@ -19,7 +19,9 @@ namespace Seeder
 
         public static void SetStressIndex()
         {
-            var _context = new DictionaryEntryContext();
+            var optionsBuilder = new DbContextOptionsBuilder<DictionaryContext>();
+            optionsBuilder.UseSqlite("Data source=dict.db");
+            var _context = new DictionaryContext(optionsBuilder.Options);
             using (var inputStream = new FileStream(@"C:\Users\Willem\Downloads\ru-ru_ozhegov_shvedova_cc_v2_0.dsl", FileMode.Open))
             {
                 int cnt = 0;
@@ -57,7 +59,9 @@ namespace Seeder
         }
         static void AddInitial()
         {
-            var _context = new DictionaryEntryContext();
+            var optionsBuilder = new DbContextOptionsBuilder<DictionaryContext>();
+            optionsBuilder.UseSqlite("Data source=dict.db");
+            var _context = new DictionaryContext(optionsBuilder.Options);
             using (var inputStream = new FileStream(@"Seeder\dictionary.dsl", FileMode.Open))
             {
                 Parser p = new Parser(inputStream);

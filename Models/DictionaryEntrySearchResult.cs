@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
-namespace Slovar
+namespace Slovar.Models
 {
     public class DictionaryEntrySearchResult
     {
-        public IEnumerable<DictionaryEntry> Results { get; set; }
+        public IEnumerable<DictionaryEntryForClient> Results { get; set; }
     }
 }

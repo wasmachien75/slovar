@@ -9,8 +9,8 @@ using Slovar;
 namespace Slovar.Migrations
 {
     [DbContext(typeof(DictionaryContext))]
-    [Migration("20190821180952_add-searchstring")]
-    partial class addsearchstring
+    [Migration("20190910162023_add-usage-example")]
+    partial class addusageexample
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,7 +18,7 @@ namespace Slovar.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
-            modelBuilder.Entity("slovar.DictionaryEntry", b =>
+            modelBuilder.Entity("Slovar.DictionaryEntry", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -36,6 +36,31 @@ namespace Slovar.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DictionaryEntries");
+                });
+
+            modelBuilder.Entity("Slovar.Usage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("EntryId");
+
+                    b.Property<int>("Position");
+
+                    b.Property<string>("Sentence");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntryId");
+
+                    b.ToTable("Usages");
+                });
+
+            modelBuilder.Entity("Slovar.Usage", b =>
+                {
+                    b.HasOne("Slovar.DictionaryEntry", "Entry")
+                        .WithMany()
+                        .HasForeignKey("EntryId");
                 });
 #pragma warning restore 612, 618
         }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System.Data.SqlClient;
+using Slovar.Models;
 
 namespace Slovar.Controllers
 {
@@ -14,12 +15,12 @@ namespace Slovar.Controllers
     [ApiController]
     public class DictionaryEntryController : ControllerBase
     {
-        DictionaryEntryContext _context;
+        DictionaryContext _context;
         IMemoryCache _cache;
-        public DictionaryEntryController(IMemoryCache cache)
+        public DictionaryEntryController(IMemoryCache cache, DictionaryContext context)
         {
-            _context = new DictionaryEntryContext();
             _cache = cache;
+            _context = context;
 
         }
         [HttpGet("id/{id}")]
@@ -29,40 +30,42 @@ namespace Slovar.Controllers
         }
 
         [HttpGet("lemma/{lemma}")]
-        public ActionResult<DictionaryEntry> Get(string lemma)
+        public ActionResult<DictionaryEntryForClient> Get(string lemma)
         {
-            return _context.DictionaryEntries.FirstOrDefault(de => de.LemmaForSearch == lemma);
+            var entry = _context.DictionaryEntries
+                .Include(de => de.Usages)
+                .FirstOrDefault(de => de.LemmaForSearch == lemma);
+
+            if (entry == null)
+            {
+                NotFound();
+            }
+            return new DictionaryEntryForClient(entry);
         }
 
         [HttpGet("random")]
         public ActionResult<DictionaryEntry> Random()
         {
-            return _context.DictionaryEntries.FromSql("SELECT * FROM DictionaryEntries ORDER BY RANDOM() LIMIT 1").First();
+            return _context.DictionaryEntries.FromSql("SELECT * FROM DictionaryEntries ORDER BY RANDOM() LIMIT 1").FirstOrDefault();
         }
 
-        [Route("search")]
-        [HttpGet]
-        public ActionResult<DictionaryEntrySearchResult> Search()
+        [HttpGet("search")]
+        public ActionResult<DictionaryEntrySearchResult> Search([FromQuery] string startsWith)
         {
-            Request.Query.TryGetValue("startsWith", out StringValues searchValue);
-            if (searchValue.Count == 0)
+            if (!_cache.TryGetValue(startsWith, out DictionaryEntrySearchResult cacheResult))
             {
-                return BadRequest();
-            }
-            var singleSearchValue = searchValue.First();
-            DictionaryEntrySearchResult cacheResult;
-            if (!_cache.TryGetValue(singleSearchValue, out cacheResult))
-            {
-                String key = TransformLemmaForSearch(searchValue.First().ToLower());
+                String key = TransformLemmaForSearch(startsWith.ToLower());
                 var result = new DictionaryEntrySearchResult()
                 {
                     Results = _context.DictionaryEntries
+                    .Include(e => e.Usages)
                     .Where(de => de.LemmaForSearch.StartsWith(key))
                     .OrderBy(de => de.LemmaForSearch)
                     .Take(10)
-                    .ToArray()
+                    .Select(e => new DictionaryEntryForClient(e))
+                    .ToList()
                 };
-                _cache.Set(singleSearchValue, result, new TimeSpan(5, 0, 0, 0, 0));
+                _cache.Set(startsWith, result, new TimeSpan(5, 0, 0, 0, 0));
                 return result;
             }
             return cacheResult;

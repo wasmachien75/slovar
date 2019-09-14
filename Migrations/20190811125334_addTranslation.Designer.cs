@@ -8,7 +8,7 @@ using Slovar;
 
 namespace Slovar.Migrations
 {
-    [DbContext(typeof(DictionaryEntryContext))]
+    [DbContext(typeof(DictionaryContext))]
     [Migration("20190811125334_addTranslation")]
     partial class addTranslation
     {

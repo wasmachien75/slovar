@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Slovar
 {
@@ -23,5 +26,12 @@ namespace Slovar
         public int? StressIndex { get; set; }
         public string Translation { get; set; }
         public string LemmaForSearch { get; private set; }
+        [InverseProperty("Entry")]
+        public List<Usage> Usages { get; set; }
+
+        public DictionaryEntry()
+        {
+            Usages = new List<Usage>();
+        }
     }
 }

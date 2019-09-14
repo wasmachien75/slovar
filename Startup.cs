@@ -9,13 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Slovar
 {
+
     public class Startup
     {
+        private static readonly LoggerFactory ConsoleLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,6 +33,11 @@ namespace Slovar
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMemoryCache();
+            services.AddDbContext<DictionaryContext>(options =>
+            {
+                options.UseLoggerFactory(ConsoleLoggerFactory);
+                options.UseSqlite("Data source=dict.db");
+            });
             services.AddResponseCaching();
             services.AddCors(options =>
             {
@@ -36,6 +46,8 @@ namespace Slovar
                     b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
             });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
