@@ -1,0 +1,5 @@
+bin/
+obj/
+Report
+*.xml
+*.info
