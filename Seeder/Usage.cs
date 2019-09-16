@@ -1,12 +1,11 @@
 using System;
-using System.Text;
 using System.Xml.Linq;
-using System.Xml;
+using Slovar.Models;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace Slovar
+namespace Slovar.Seeders
 {
     public class UsageSeeder
     {

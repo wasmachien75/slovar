@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace Slovar
+namespace Slovar.Models
 {
     [ResponseCache(Duration = 86400, Location = ResponseCacheLocation.Client)]
     public class DictionaryEntry
@@ -19,7 +19,7 @@ namespace Slovar
             set
             {
                 _lemma = value;
-                LemmaForSearch = new LemmaForSearchTransformer(_lemma).Construct();
+                LemmaForSearch = new LemmaNormalizer(_lemma).Normalize();
             }
         }
         public string Definition { get; set; }

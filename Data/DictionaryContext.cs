@@ -1,8 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
+using Slovar.Models;
 
 namespace Slovar
 {

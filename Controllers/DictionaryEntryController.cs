@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
-using System.Data.SqlClient;
 using Slovar.Models;
 
 namespace Slovar.Controllers
@@ -21,39 +17,35 @@ namespace Slovar.Controllers
         {
             _cache = cache;
             _context = context;
-
-        }
-        [HttpGet("id/{id}")]
-        public ActionResult<DictionaryEntry> Get(int id)
-        {
-            return _context.DictionaryEntries.Find(id);
         }
 
         [HttpGet("lemma/{lemma}")]
         public ActionResult<DictionaryEntryForClient> Get(string lemma)
         {
-            var cacheKey = "entry_" + lemma;
+            var normalizedLemma = TransformLemmaForSearch(lemma);
+            var cacheKey = "entry_" + normalizedLemma;
             if (!_cache.TryGetValue(cacheKey, out DictionaryEntryForClient cacheResult))
             {
                 var entry = _context.DictionaryEntries
                     .Include(de => de.Usages)
-                    .FirstOrDefault(de => de.LemmaForSearch == lemma);
+                    .FirstOrDefault(de => de.LemmaForSearch == normalizedLemma);
 
                 if (entry == null)
                 {
-                    NotFound();
+                    return NotFound();
                 }
                 var entryForClient = new DictionaryEntryForClient(entry);
-                _cache.Set("entry_" + lemma, entryForClient, TimeSpan.FromDays(1));
+                _cache.Set(cacheKey, entryForClient, TimeSpan.FromDays(1));
                 return entryForClient;
             }
             return cacheResult;
         }
 
         [HttpGet("random")]
-        public ActionResult<DictionaryEntry> Random()
+        public ActionResult<DictionaryEntryForClient> Random()
         {
-            return _context.DictionaryEntries.FromSql("SELECT * FROM DictionaryEntries ORDER BY RANDOM() LIMIT 1").FirstOrDefault();
+            var entry = _context.DictionaryEntries.FromSql("SELECT * FROM DictionaryEntries ORDER BY RANDOM() LIMIT 1").FirstOrDefault();
+            return new DictionaryEntryForClient(entry);
         }
 
         [HttpGet("search")]
@@ -81,7 +73,7 @@ namespace Slovar.Controllers
 
         private string TransformLemmaForSearch(string lemma)
         {
-            return new LemmaForSearchTransformer(lemma).Construct();
+            return new LemmaNormalizer(lemma).Normalize();
         }
 
     }

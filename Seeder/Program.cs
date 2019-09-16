@@ -1,13 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Slovar;
+using Slovar.Models;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Seeder
+namespace Slovar.Seeders
 {
     public class Seeder
     {

@@ -10,7 +10,7 @@ namespace Slovar.Models
         public string Definition { get; set; }
         public string Translation { get; set; }
         public IEnumerable<Usage> Usages { get; set; }
-        public int StressPosition { get; set; }
+        public int? StressIndex { get; set; }
 
         public DictionaryEntryForClient(DictionaryEntry entry)
         {
@@ -18,6 +18,7 @@ namespace Slovar.Models
             this.Lemma = entry.Lemma;
             this.Usages = entry.Usages?.Take(5);
             this.Translation = entry.Translation;
+            this.StressIndex = entry.StressIndex;
         }
     }
 }

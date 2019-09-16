@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
-using Slovar;
+using Slovar.Models;
 using System.IO;
 using System.Text;
 
-namespace Slovar
+namespace Slovar.Seeders
 {
 
     public class EntryComparer : IComparer<DictionaryEntry>

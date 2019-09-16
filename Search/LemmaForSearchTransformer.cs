@@ -1,13 +1,13 @@
 namespace Slovar
 {
-    public class LemmaForSearchTransformer
+    public class LemmaNormalizer
     {
         string _lemma;
-        public LemmaForSearchTransformer(string lemma)
+        public LemmaNormalizer(string lemma)
         {
             _lemma = lemma;
         }
-        public string Construct()
+        public string Normalize()
         {
             return _lemma.Replace('ё', 'е');
         }

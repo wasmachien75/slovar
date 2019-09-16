@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 
 
-namespace Slovar
+namespace Slovar.Models
 {
     public class Usage
     {
