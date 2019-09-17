@@ -9,7 +9,15 @@ module.exports = {
     filename: "main.js"
   },
   optimization: {
-    minimizer: [new UglifyJsPlugin()]
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          output: {
+            comments: false
+          }
+        }
+      })
+    ]
   },
   devServer: {
     contentBase: path.resolve(__dirname, "wwwroot")
@@ -23,6 +31,16 @@ module.exports = {
       {
         test: /\.s?css$/,
         use: ["vue-style-loader", "css-loader", "sass-loader"]
+      },
+      {
+        test: /\.js/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "babel-preset-minify"]
+          }
+        }
       }
     ]
   },
