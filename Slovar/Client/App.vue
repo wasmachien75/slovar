@@ -92,14 +92,13 @@ export default {
     },
 
     async fetchJson(relativeUrl) {
-      console.log("Fetching " + relativeUrl);
       this.isFetching = true;
       try {
         let response = await fetch(this.rootEndPoint + relativeUrl);
         if (response.ok) {
           return await response.json();
         } else {
-          console.log("Error while fetching " + relativeUrl);
+          throw new Error("Error while fetching " + relativeUrl);
         }
       } catch (e) {
         console.log(e);
@@ -148,6 +147,10 @@ h5 {
   padding-left: 16px;
   margin-top: 45px;
   font-family: $font;
+  transition: all 0.2s;
+  &.fetching {
+    color: #ddd;
+  }
 }
 
 .autocomplete {

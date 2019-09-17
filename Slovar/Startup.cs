@@ -29,7 +29,7 @@ namespace Slovar
             services.AddMemoryCache();
             services.AddDbContext<DictionaryContext>(options =>
             {
-                options.UseLoggerFactory(ConsoleLoggerFactory);
+                // options.UseLoggerFactory(ConsoleLoggerFactory);
                 options.UseSqlite("Data source=dict.db");
             });
             services.AddResponseCaching();

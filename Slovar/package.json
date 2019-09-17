@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "concurrently -n Vue,dotnet \"webpack-dev-server\" \" dotnet watch run --launch-profile Development\"",
     "build": "webpack --mode='production' && dotnet publish -c Release",
-    "upload-db": "scp dict.db root@116.203.204.82:/home/slovar/bin/Release/netcoreapp2.2/publish/"
+    "upload-db": "scp dict.db root@116.203.204.82:/home/slovar/Slovar/bin/Release/netcoreapp2.2/publish/"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
@@ -29,6 +29,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "vue-loader": "^15.7.1",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.10",
