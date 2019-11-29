@@ -52,13 +52,14 @@ namespace Slovar.Controllers
         public ActionResult<DictionaryEntrySearchResult> Search([FromQuery] string startsWith)
         {
             var cacheKey = "search_" + startsWith;
+            var lang = IdentifyLanguage(startsWith);
             if (!_cache.TryGetValue(cacheKey, out DictionaryEntrySearchResult cacheResult))
             {
                 String key = TransformLemmaForSearch(startsWith.ToLower());
                 var result = new DictionaryEntrySearchResult()
                 {
                     Results = _context.DictionaryEntries
-                    .Where(de => de.LemmaForSearch.StartsWith(key))
+                    .Where(de => lang == Language.Russian ? de.LemmaForSearch.StartsWith(key) : de.Translation.Contains(key))
                     .OrderBy(de => de.LemmaForSearch)
                     .Take(10)
                     .Select(e => e.Lemma)
@@ -69,6 +70,22 @@ namespace Slovar.Controllers
             }
             return cacheResult;
 
+        }
+
+        private Language IdentifyLanguage(string text)
+        {
+            foreach (char c in text)
+            {
+                if (c >= 65 && c <= 122)
+                {
+                    return Language.English;
+                }
+                if (c >= 1024 && c <= 1279)
+                {
+                    return Language.Russian;
+                }
+            }
+            return Language.Russian; //default
         }
 
         private string TransformLemmaForSearch(string lemma)
